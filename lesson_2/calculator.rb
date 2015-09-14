@@ -10,21 +10,30 @@ def prompt(message)
   puts "=> #{message}"
 end
 
-def valid_number?(num)
-  num.to_i != 0
+def integer?(num)
+  num.to_i.to_s == num
 end
 
-def operation_to_message(op)
-  case op
-  when '1'
-    'Adding'
-  when '2'
-    'Subtracting'
-  when '3'
-    'Multiplying'
-  when '4'
-    'Dividing'
-  end
+def float?(num)
+  num.to_f.to_s == num
+end
+
+def valid_number?(num)
+  integer?(num) || float?(num)
+end
+
+def operation_to_message(operation)
+  type = case operation
+           when '1'
+             'Adding'
+           when '2'
+             'Subtracting'
+           when '3'
+             'Multiplying'
+           when '4'
+             'Dividing'
+           end
+  type
 end
 
 prompt("Welcome to my fancy Calculator! Please Enter your name:")
@@ -48,6 +57,7 @@ loop do # main loop
     prompt("What's the first number?")
     number1 = gets.chomp
 
+    # if integer?(number1)
     if valid_number?(number1)
       break
     else
@@ -60,6 +70,7 @@ loop do # main loop
     prompt("What's the second number?")
     number2 = gets.chomp
 
+    # if integer?(number2)
     if valid_number?(number2)
       break
     else
