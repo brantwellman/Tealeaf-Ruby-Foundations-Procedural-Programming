@@ -1,0 +1,7 @@
+welcome: "Welcome to my fancy Calculator! Please Enter your name:"
+provide_name: "Make sure to provide a name."
+first_number: "What's the first number?"
+second_number: "What's the second number?"
+not_valid_number: "That isn't a valid number"
+choose_number: "Must choose 1, 2, 3, or 4"
+another_calculation: "Do you want to perform another calculation? (Y to calculate again)"
