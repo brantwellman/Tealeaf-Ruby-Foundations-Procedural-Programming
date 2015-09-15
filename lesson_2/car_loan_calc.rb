@@ -15,7 +15,6 @@ def invalid_loan_duration?(num)
   num.empty? || num.to_f <= 0
 end
 
-
 prompt("Welcome to the fancy-dancy Car Loan Calculator!")
 prompt("Please provide us with your name for the best service possible.")
 
@@ -58,17 +57,19 @@ loop do
   loop do
     prompt("Finally, how many years is the loan?")
     loan_duration_years = gets.chomp
-      if invalid_loan_duration?(loan_duration_years)
-        prompt("Please provide the loan duration in 'years'.")
-      else
-        break
-      end
+    if invalid_loan_duration?(loan_duration_years)
+      prompt("Please provide the loan duration in 'years'.")
+    else
+      break
+    end
   end
 
   monthly_interest_rate = rate.to_f / 12
   loan_duration_months = loan_duration_years.to_i * 12
 
-  monthly_loan_payment = loan_amount.to_f * (monthly_interest_rate * (1 + monthly_interest_rate) ** loan_duration_months.to_i) / ((1 + monthly_interest_rate) ** loan_duration_months.to_i - 1)
+  monthly_loan_payment = loan_amount.to_f *
+                         (monthly_interest_rate * (1 + monthly_interest_rate)**loan_duration_months.to_i) /
+                         ((1 + monthly_interest_rate)**loan_duration_months.to_i - 1)
 
   prompt("Your monthly loan payment will be $#{monthly_loan_payment}")
 
