@@ -5,15 +5,16 @@ def prompt(message)
 end
 
 def choice_selection(first_letter)
-  if first_letter == 'r'
+  case first_letter
+  when 'r'
     "rock"
-  elsif first_letter == 'p'
+  when 'p'
     "paper"
-  elsif first_letter == 's'
+  when 's'
     "scissors"
-  elsif first_letter == 'l'
+  when 'l'
     "lizard"
-  elsif first_letter == 'sp'
+  when 'sp'
     "spock"
   end
 end
