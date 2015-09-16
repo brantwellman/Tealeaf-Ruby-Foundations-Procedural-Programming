@@ -1,3 +1,5 @@
+require 'pry'
+
 VALID_CHOICES = %w(rock paper scissors lizard spock)
 
 def prompt(message)
@@ -44,49 +46,46 @@ def display_result(player, computer)
   end
 end
 
-# def wins_tracker(player, computer)
-#   player_wins = 0
-#   computer_wins = 0
-#   if win?(player, computer)
-#     player_wins = player_wins + 1
-#     prompt("Your score is: #{player_wins}")
-#   elsif win?(computer, player)
-#     computer_wins = computer_wins + 1
-#     prompt("The computer's score is: #{computer_wins}.")
-#   end
-# end
+def wins_tracker(player, computer, player_wins, computer_wins)
+  if win?(player, computer)
+    player_wins << '1'
+  elsif win?(computer, player)
+    computer_wins << '1'
+  end
+end
 
+player_wins = []
+computer_wins = []
 loop do
   choice = ''
-  # player_wins = 0
-  # computer_wins = 0
-  # while (player_wins < 5 || computer_wins < 5) do
-    loop do
-      prompt("Choose one: #{VALID_CHOICES.join(', ')}")
-      prompt("Type r - rock, p - paper, s - scissors, l - lizard, sp - spock")
-      first_letter = gets.chomp
-      choice = choice_selection(first_letter)
 
-      if VALID_CHOICES.include?(choice)
-        break
-      else
-        prompt("That's not a valid choice.")
-      end
+  loop do
+    prompt("Choose one: #{VALID_CHOICES.join(', ')}")
+    prompt("Type r - rock, p - paper, s - scissors, l - lizard, sp - spock")
+    first_letter = gets.chomp
+    choice = choice_selection(first_letter)
+
+    if VALID_CHOICES.include?(choice)
+      break
+    else
+      prompt("That's not a valid choice.")
     end
-
-    computer_choice = VALID_CHOICES.sample
-
-    prompt("You chose: #{choice}. The computer chose: #{computer_choice}.")
-
-    display_result(choice, computer_choice)
-
-    # wins_tracker(choice, computer_choice)
-    # prompt("Your score is: #{player_wins}.")
-    # prompt("The computer's score is: #{computer_wins}")
-
-    prompt("Do you want to play again?")
-    break unless gets.chomp.downcase.start_with?('y')
   end
-# end
+
+  computer_choice = VALID_CHOICES.sample
+
+  prompt("You chose: #{choice}. The computer chose: #{computer_choice}.")
+
+  display_result(choice, computer_choice)
+
+  wins_tracker(choice, computer_choice, player_wins, computer_wins)
+  prompt("Your score is: #{player_wins.size}.")
+  prompt("The computer's score is: #{computer_wins.size}")
+
+  break if player_wins.size == 5 || computer_wins.size == 5
+
+  prompt("Do you want to play again?")
+  break unless gets.chomp.downcase.start_with?('y')
+end
 
 prompt("Thanks for playing. Buh-Bye!")
