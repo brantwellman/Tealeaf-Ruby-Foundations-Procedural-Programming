@@ -16,6 +16,30 @@ def joinor(array, spacer, word = 'or')
   array.join(spacer)
 end
 
+def choose_first_player(current_player)
+  prompt "Who would you like to go first?"
+  loop do
+    prompt "Please enter 'C' for Computer, 'P' for Player, or 'R for Random'."
+    answer = gets.chomp.downcase
+    if answer == 'r'
+      random_choice = ['p', 'c'].sample
+      current_player << random_choice
+    else
+      current_player << answer
+    end
+    break if current_player.any? { |i| ['c', 'p', 'r'].include? i }
+    prompt "That was not a proper selection"
+  end
+end
+
+def alternate_player(current_player)
+  if current_player.last == 'c'
+    current_player << 'p'
+  elsif current_player.last == 'p'
+    current_player << 'c'
+  end
+end
+
 def display_board(brd)
   system 'clear'
   puts "Player is a #{PLAYER_MARKER}. Computer is a #{COMPUTER_MARKER}."
@@ -44,20 +68,57 @@ def empty_squares(brd)
   brd.keys.select { |num| brd[num] == INITIAL_MARKER }
 end
 
-def player_places_piece!(brd)
-  square = ''
-  loop do
-    prompt("Choose a square (#{joinor(empty_squares(brd), ', ')}):")
-    square = gets.chomp.to_i
-    break if empty_squares(brd).include?(square)
-    prompt("Sorry, that's not a valid choice.")
+def place_piece!(brd, current_player)
+  if current_player.last == 'p'
+    # player moves
+    square = ''
+    loop do
+      prompt("Choose a square (#{joinor(empty_squares(brd), ', ')}):")
+      square = gets.chomp.to_i
+      break if empty_squares(brd).include?(square)
+      prompt("Sorry, that's not a valid choice.")
+    end
+    brd[square] = PLAYER_MARKER
+  elsif current_player.last == 'c'
+    # computer moves
+    square = nil
+
+    # winning move
+    WINNING_LINES.each do |line|
+      square = find_potential_wins(line, brd, COMPUTER_MARKER)
+      break if square
+    end
+
+    # blocking move
+    if !square
+      WINNING_LINES.each do |line|
+        square = find_potential_wins(line, brd, PLAYER_MARKER)
+        break if square
+      end
+    end
+
+    # middle square move
+    if !square
+      if empty_squares(brd).include?(5)
+        square = 5
+      end
+    end
+
+    # random move
+    if !square
+      square = empty_squares(brd).sample
+    end
+    brd[square] = COMPUTER_MARKER
+    display_board(brd)
   end
-  brd[square] = PLAYER_MARKER
 end
 
-def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
-  brd[square] = COMPUTER_MARKER
+def find_potential_wins(line, brd, marker)
+  if brd.values_at(*line).count(marker) == 2
+    brd.select { |k, v| line.include?(k) && v == INITIAL_MARKER }.keys.first
+  else
+    nil
+  end
 end
 
 def board_full?(brd)
@@ -89,17 +150,15 @@ end
 
 player_wins = []
 computer_wins = []
+current_player = []
+
 loop do
-
   board = initialize_board
-
+  choose_first_player(current_player)
   loop do
     display_board(board)
-
-    player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
-
-    computer_places_piece!(board)
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
     break if someone_won?(board) || board_full?(board)
   end
 
