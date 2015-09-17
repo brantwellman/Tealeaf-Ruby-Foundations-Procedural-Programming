@@ -79,7 +79,18 @@ def detect_winner(brd)
   nil
 end
 
+def win_tracker(brd, player_wins, computer_wins)
+  if detect_winner(brd) == 'Player'
+    player_wins << '1'
+  elsif detect_winner(brd) == 'Computer'
+    computer_wins << '1'
+  end
+end
+
+player_wins = []
+computer_wins = []
 loop do
+
   board = initialize_board
 
   loop do
@@ -99,6 +110,11 @@ loop do
   else
     prompt "It's a tie!"
   end
+
+  win_tracker(board, player_wins, computer_wins)
+  prompt "The score is Player: #{player_wins.size} and Computer: #{computer_wins.size}."
+
+  break if player_wins.size == 5 || computer_wins.size == 5
 
   prompt "Play again? (y or n)"
   break unless gets.chomp.downcase.start_with?('y')
