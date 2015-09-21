@@ -34,8 +34,8 @@ def total(hand)
   end
 
   if sum > 21
-    values.select { |v| v == 'A' }.count.times do
-      sum -=10
+    values.count { |v| v == 'A' }.times do
+      sum -= 10
     end
   end
   sum
@@ -44,46 +44,6 @@ end
 def busted?(hand)
   total(hand) > 21
 end
-
-# def player_turn(deck, player_hand)
-#   answer = ''
-#   loop do
-#     prompt "Would you like to Hit (H) or Stay (S)? Please enter one."
-#     answer = gets.chomp.downcase
-#     if !answer.start_with?('s', 'h')
-#       prompt "That was an improper response."
-#     elsif answer.start_with?('h')
-#       deal_card(deck, player_hand)
-#       prompt "You were dealt a #{player_hand.last[0]}."
-#       prompt "Your total is #{total(player_hand)}"
-#         if busted?(player_hand)
-#          prompt "You busted. The Dealer wins. :("
-#          break
-#          return
-#        end
-#     else
-#       break
-#     end
-#   end
-# end
-
-# def dealer_turn(deck, dealer_hand)
-  # prompt "The Dealer has a #{dealer_hand[0][0]} and the hole card is a #{dealer_hand[1][0]}."
-  # loop do
-  #   if total(dealer_hand) >= 17
-  #     prompt "The dealer stays."
-  #     break
-  #   else
-  #     deal_card(deck, dealer_hand)
-  #     prompt "The Dealer dealt himself a #{dealer_hand.last[0]}."
-  #     prompt "The Dealer's total is #{total(dealer_hand)}."
-  #     if busted?(dealer_hand)
-  #       prompt "The Dealer busted. You win!"
-  #       break
-  #     end
-  #   end
-  # end
-# end
 
 def result?(dealer_hand, player_hand)
   player_total = total(player_hand)
@@ -123,7 +83,6 @@ end
 prompt "Welcome to my fancy dancy game of Twenty-one!"
 
 loop do
-
   player_cards = []
   dealer_cards = []
   new_deck = initialize_deck
