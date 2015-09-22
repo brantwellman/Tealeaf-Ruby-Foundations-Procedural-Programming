@@ -33,7 +33,7 @@ def total(hand)
     end
   end
 
-  if sum > 21
+  if sum > 31
     values.count { |v| v == 'A' }.times do
       sum -= 10
     end
@@ -42,16 +42,16 @@ def total(hand)
 end
 
 def busted?(hand)
-  total(hand) > 21
+  total(hand) > 31
 end
 
 def result?(dealer_hand, player_hand)
   player_total = total(player_hand)
   dealer_total = total(dealer_hand)
 
-  if player_total > 21
+  if player_total > 31
     :player_busted
-  elsif dealer_total > 21
+  elsif dealer_total > 31
     :dealer_busted
   elsif dealer_total >= player_total
     :dealer
@@ -104,7 +104,8 @@ def game_summary(dealer_hand, player_hand)
   prompt "The Dealer's total is #{total(dealer_hand)}."
 end
 
-prompt "Welcome to my fancy dancy game of Twenty-one!"
+prompt "Welcome to my fancy dancy game of THIRTY-one!"
+prompt "The game is just like '21', except we go to '31', and the dealer stays at '27'."
 prompt "Whoever wins five hands first, wins the game!"
 
 player_wins = []
@@ -155,7 +156,7 @@ loop do
   prompt "The Dealer has a #{dealer_cards[0][0]} and the hole card is a #{dealer_cards[1][0]}."
 
   loop do
-    break if busted?(dealer_cards) || total(dealer_cards) >= 17
+    break if busted?(dealer_cards) || total(dealer_cards) >= 27
     prompt "The Dealer hits"
     deal_card(new_deck, dealer_cards)
     prompt "The Dealer dealt himself a #{dealer_cards.last[0]}."
@@ -177,13 +178,12 @@ loop do
   win_tracker(dealer_wins, player_wins, dealer_cards, player_cards)
   prompt "The score is Player: #{player_wins.size} and Dealer: #{dealer_wins.size}."
 
-  if player_wins.size == 2 || dealer_wins.size == 2
+  if player_wins.size == 5 || dealer_wins.size == 5
     prompt "The game is over!"
     break
   end
 
   break unless play_again?
-
 
 end
 
