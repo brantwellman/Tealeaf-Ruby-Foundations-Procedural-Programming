@@ -60,18 +60,37 @@ def result?(dealer_hand, player_hand)
   end
 end
 
+def win_tracker(dealer_wins, player_wins, dealer_hand, player_hand)
+  result = result?(dealer_hand, player_hand)
+
+  case result
+  when :player
+    player_wins << '1'
+  when :dealer_busted
+    player_wins << '1'
+  when :dealer
+    dealer_wins << '1'
+  when :player_busted
+    dealer_wins << '1'
+  end
+end
+
 def display_winner(dealer_hand, player_hand)
   result = result?(dealer_hand, player_hand)
 
   case result
   when :player_busted
+    game_summary(dealer_hand, player_hand)
     prompt "You busted. Dealer wins."
   when :dealer_busted
+    game_summary(dealer_hand, player_hand)
     prompt "The Dealer busted. You win!"
   when :dealer
-    prompt "Your total is #{total(player_hand)} and the Dealer's total is #{total(dealer_hand)}.  Sorry, the dealer won."
+    game_summary(dealer_hand, player_hand)
+    prompt "The Dealer wins."
   when :player
-    "Your total is #{total(player_hand)} and the Dealer's total is #{total(dealer_hand)}. You win!"
+    game_summary(dealer_hand, player_hand)
+    prompt "You won!"
   end
 end
 
@@ -80,8 +99,16 @@ def play_again?
   gets.chomp.downcase.start_with?('y')
 end
 
-prompt "Welcome to my fancy dancy game of Twenty-one!"
+def game_summary(dealer_hand, player_hand)
+  prompt "Your total is #{total(player_hand)}."
+  prompt "The Dealer's total is #{total(dealer_hand)}."
+end
 
+prompt "Welcome to my fancy dancy game of Twenty-one!"
+prompt "Whoever wins five hands first, wins the game!"
+
+player_wins = []
+dealer_wins = []
 loop do
   player_cards = []
   dealer_cards = []
@@ -116,6 +143,8 @@ loop do
 
   if busted?(player_cards)
     display_winner(dealer_cards, player_cards)
+    win_tracker(dealer_wins, player_wins, dealer_cards, player_cards)
+    prompt "The score is Player: #{player_wins.size} and Dealer: #{dealer_wins.size}."
     play_again? ? next : break
   else
     prompt "You stayed and your total is #{total(player_cards)}"
@@ -124,6 +153,7 @@ loop do
   # dealer_turn(new_deck, dealer_cards)
   prompt "Now its the Dealer's turn..."
   prompt "The Dealer has a #{dealer_cards[0][0]} and the hole card is a #{dealer_cards[1][0]}."
+
   loop do
     break if busted?(dealer_cards) || total(dealer_cards) >= 17
     prompt "The Dealer hits"
@@ -134,17 +164,27 @@ loop do
 
   if busted?(dealer_cards)
     display_winner(dealer_cards, player_cards)
+    win_tracker(dealer_wins, player_wins, dealer_cards, player_cards)
+    prompt "The score is Player: #{player_wins.size} and Dealer: #{dealer_wins.size}."
     play_again? ? next : break
   else
     prompt "Dealer stays and his total is #{total(dealer_cards)}"
   end
 
-  prompt "Both have stayed."
-  prompt "The Player's total is #{total(player_cards)}."
-  prompt "The Dealer's total is #{total(dealer_cards)}."
+  prompt "Both you and the Dealer have stayed."
   display_winner(dealer_cards, player_cards)
 
+  win_tracker(dealer_wins, player_wins, dealer_cards, player_cards)
+  prompt "The score is Player: #{player_wins.size} and Dealer: #{dealer_wins.size}."
+
+  if player_wins.size == 2 || dealer_wins.size == 2
+    prompt "The game is over!"
+    break
+  end
+
   break unless play_again?
+
+
 end
 
 prompt "Thanks for playing my fancy dancy game of Twenty-one!"
