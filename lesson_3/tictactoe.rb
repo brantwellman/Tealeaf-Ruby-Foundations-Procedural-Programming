@@ -154,6 +154,7 @@ current_player = []
 
 loop do
   board = initialize_board
+  puts board.inspect
   choose_first_player(current_player)
   loop do
     display_board(board)
