@@ -184,7 +184,6 @@ loop do
   end
 
   break unless play_again?
-
 end
 
 prompt "Thanks for playing my fancy dancy game of Twenty-one!"
